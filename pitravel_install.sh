@@ -14,6 +14,7 @@ echo "Wireguard"
 echo "Network_Manager"
 echo "Docker"
 echo "Portainer"
+echo "Portainer_Agent"
 echo "Syncthing"
 echo "Pi-apps"
 read -p "Which application to install?: " app
@@ -132,6 +133,24 @@ echo ""
 exec "$0" "$@"
 }
 
+function Portainer_Agent {
+clear
+echo "Installing Portainer Agent" ; sleep 2
+docker run -d \
+  -p 9001:9001 \
+  --name portainer_agent \
+  --restart=always \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  -v /var/lib/docker/volumes:/var/lib/docker/volumes \
+  portainer/agent:2.18.1
+clear
+echo "Portainer Agent Installed" ; sleep 2
+echo ""
+echo "" 
+exec "$0" "$@"
+}
+
+
 function Syncthing {
 clear
 echo "Installing Syncthing" ; sleep 2
@@ -172,6 +191,9 @@ elif [ "$app" == "Docker" ]; then
 
 elif [ "$app" == "Portainer" ]; then
     Portainer
+    
+elif [ "$app" == "Portainer_Agent" ]; then
+    Portainer_Agent  
 	
 elif [ "$app" == "Syncthing" ]; then
     Syncthing
