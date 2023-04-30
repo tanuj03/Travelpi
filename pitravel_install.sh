@@ -25,7 +25,7 @@ function Comitup {
 clear
 echo "Installing Comitup" ; sleep 2
 sudo apt update 
-sudo apt-get install comitup
+sudo apt-get install comitup -y
 rm /etc/network/interfaces
 systemctl mask dnsmasq.service
 systemctl mask systemd-resolved.service
