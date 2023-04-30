@@ -90,24 +90,8 @@ sudo reboot
 function Docker {
 clear
 echo "Installing Docker" ; sleep 2
-sudo apt-get remove docker docker-engine docker.io containerd runc
-sudo apt-get update
-sudo apt-get install \
-    ca-certificates \
-    curl \
-    gnupg
-	
-sudo install -m 0755 -d /etc/apt/keyrings -y
-curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-sudo chmod a+r /etc/apt/keyrings/docker.gpg
-echo \
-  "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian \
-  "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
-  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-
-sudo apt-get update
-sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
-sudo usermod -aG docker $USER 
+curl -sSL https://get.docker.com | sh || error "Failed to install Docker."
+sudo usermod -aG docker $USER || error "Failed to add user to the Docker usergroup."
 clear
 echo "Docker Installed" ; sleep 2
 echo ""
