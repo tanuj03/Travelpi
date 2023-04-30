@@ -97,7 +97,7 @@ sudo apt-get install \
     curl \
     gnupg
 	
-sudo install -m 0755 -d /etc/apt/keyrings
+sudo install -m 0755 -d /etc/apt/keyrings -y
 curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
 sudo chmod a+r /etc/apt/keyrings/docker.gpg
 echo \
