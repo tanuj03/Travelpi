@@ -1,0 +1,155 @@
+version: "3.8"
+services:
+  radarr:
+    image: lscr.io/linuxserver/radarr:latest
+    container_name: radarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    volumes:
+      - /portainer/Files/AppData/Config/Radarr:/config
+      - /home/pi/docker/movies:/movies #optional
+      - /home/pi/docker/Downloads:/downloads #optional
+    ports:
+      - 7878:7878
+    restart: unless-stopped
+
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: sonarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    volumes:
+      - /portainer/Files/AppData/Config/Sonarr:/config
+      - /home/pi/docker/tv:/tv #optional
+      - /home/pi/docker/Downloads:/downloads #optional
+    ports:
+      - 8989:8989
+    restart: unless-stopped
+
+  metube:
+    image: ghcr.io/alexta69/metube
+    container_name: metube
+    restart: unless-stopped
+    ports:
+      - "8082:8081"
+    volumes:
+      - /home/pi/docker/Downloads/Metube:/downloads
+
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+      - WEBUI_PORT=8080
+    volumes:
+      - /portainer/Files/AppData/Config/Qbit:/config
+      - /home/pi/docker/Downloads:/downloads
+    ports:
+      - 8080:8080
+      - 6881:6881
+      - 6881:6881/udp
+    restart: unless-stopped
+
+  jackett:
+    image: lscr.io/linuxserver/jackett:latest
+    container_name: jackett
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+      - AUTO_UPDATE=true #optional
+      - RUN_OPTS= #optional
+    volumes:
+      - /portainer/Files/AppData/Config/Jackett:/config
+      - /home/pi/docker/Downloads:/downloads
+    ports:
+      - 9117:9117
+    restart: unless-stopped
+
+  gluetun:
+    image: qmcgaw/gluetun
+    container_name: gluetun
+    # line above must be uncommented to allow external containers to connect. See https://github.com/qdm12/gluetun/wiki/Connect-a-container-to-gluetun#external-container-to-gluetun
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    ports:
+      - 8888:8888/tcp # HTTP proxy
+      - 8388:8388/tcp # Shadowsocks
+      - 8388:8388/udp # Shadowsocks
+    volumes:
+      - /portainer/Files/AppData/Config/Gluetun:/gluetun
+    environment:
+      # See https://github.com/qdm12/gluetun/wiki
+      - VPN_SERVICE_PROVIDER=IPVANISH
+      - VPN_TYPE=openvpn
+      # OpenVPN:
+      - OPENVPN_USER=tanujboodadoo@hotmail.com
+      - OPENVPN_PASSWORD=Chennaiexpress030299
+      # Wireguard:
+      # - WIREGUARD_PRIVATE_KEY=wOEI9rqqbDwnN8/Bpp22sVz48T71vJ4fYmFWujulwUU=
+      # - WIREGUARD_ADDRESSES=10.64.222.21/32
+      # Timezone for accurate log times
+      - TZ=
+      # Server list updater. See https://github.com/qdm12/gluetun/wiki/Updating-Servers#periodic-update
+      - UPDATER_PERIOD=
+      - UPDATER_VPN_SERVICE_PROVIDERS=
+
+  jellyfin:
+    image: lscr.io/linuxserver/jellyfin:latest
+    container_name: jellyfin
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=CA/Eastern
+      - JELLYFIN_PublishedServerUrl=192.168.0.5 #optional
+    volumes:
+      - /portainer/Files/AppData/Config/Jellyfin:/config
+      - /home/pi/docker/jellyfin/TV:/data/tvshows
+      - /home/pi/docker/jellyfin/Movies:/data/movies
+    ports:
+      - 8096:8096
+      #- 8920:8920 #optional
+      #- 7359:7359/udp #optional
+      #- 1900:1900/udp #optional
+    restart: unless-stopped
+
+  dashy:
+    container_name: Dashy
+    image: lissy93/dashy:latest
+    volumes:
+      - /portainer/Files/AppData/Config/Dashy/local-conf.yml:/app/public/conf.yml
+      - /portainer/Files/AppData/Config/Dashy/icons/dashboard-icons/png:/app/public/item-icons
+
+    # Set port that web service will be served on. Keep container port as 80
+    ports:
+      - 9100:80
+
+    # Set any environmental variables
+    environment:
+      - NODE_ENV=production
+    # Specify your user ID and group ID. You can find this by running `id -u` and `id -g`
+      - PUID=1000
+      - PGID=1000
+
+    # Specify restart policy
+    restart: unless-stopped
+
+  jellyseerr:
+    image: fallenbagel/jellyseerr:latest
+    container_name: jellyseerr
+    environment:
+      - LOG_LEVEL=debug
+      - TZ=CA/Eastern
+    ports:
+      - 5055:5055
+    volumes:
+      - /portainer/Files/AppData/Config/Jellyseerr:/app/config
+    restart: unless-stopped
