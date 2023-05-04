@@ -17,6 +17,7 @@ echo "Portainer"
 echo "Portainer_Agent"
 echo "Syncthing"
 echo "Pi-apps"
+echo "Docker_compose"
 read -p "Which application to install?: " app
 
 
@@ -161,6 +162,16 @@ echo ""
 exec "$0" "$@"
 }
 
+function Docker_compose {
+
+cd /home/pi/Travelpi
+echo "Unzipping docker config files:"
+unzip Travelpi_dockerconfig.zip -d /portainer/Files/AppData
+echo "Starting docker compose"
+docker compose up
+
+}
+
 if [ "$app" == "Comitup" ]; then
     Comitup
 
@@ -183,5 +194,8 @@ elif [ "$app" == "Syncthing" ]; then
     Syncthing
 	
 elif [ "$app" == "Pi-apps" ]; then
-    Pi-apps     	
+    Pi-apps
+
+elif [ "$app" == "Docker_compose" ]; then
+    Docker_compose 	
 fi
