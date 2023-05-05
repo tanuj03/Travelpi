@@ -4,13 +4,13 @@ clear
 
 #Locations
 
-harddrive="/mnt/usb1/NAS/test/Portugal"
-syncphoto="/mnt/usb1/NAS/test/sync/Portugal Photos"
-syncvideo="/mnt/usb1/NAS/test/sync/Portugal Videos"
-phone="/mnt/usb1/NAS/test/phone"
-camera="/mnt/usb1/NAS/test/camera"
-insta360="/mnt/usb1/NAS/test/insta360"
-
+harddrive="/mnt/Travelpi/Travelpi/Portugal/Raw"
+syncphoto="/mnt/Travelpi/Travelpi/Portugal/Sync/Portugal_Photos"
+syncvideo="/mnt/Travelpi/Travelpi/Portugal/Sync/Portugal_Videos"
+phone="/mnt/Phone/Internal shared storage/DCIM/Travelpi"
+read -p "Camera Files path:" camera
+read -p "Insta360 Files path:" insta360
+clear
 
 function check {
 
